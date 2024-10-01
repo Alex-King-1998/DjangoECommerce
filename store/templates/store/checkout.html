@@ -1,0 +1,127 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="{% static 'css/checkout.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        #checkout-container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #payment-form div {
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #order-summary {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .error-message {
+            color: red;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="checkout-container">
+        <h2>Checkout</h2>
+
+        {% if error %}
+            <div class="error-message">{{ error }}</div>
+        {% endif %}
+
+        <form method="post" id="payment-form">
+            {% csrf_token %}
+            <input type="hidden" name="stripeToken" id="stripeToken">
+
+            <!-- Add Stripe Elements to your form -->
+            <div id="card-element"></div>
+
+            <div>
+                <button type="submit">Pay</button>
+            </div>
+        </form>
+
+        <div id="order-summary">
+            <h3>Your Order Summary</h3>
+            <ul>
+                {% for item in order.items.all %}
+                    <li>{{ item.product.name }} - ${{ item.product.price }} (Quantity: {{ item.quantity }})</li>
+                {% endfor %}
+            </ul>
+            <p>Total: ${{ order.total_price|floatformat:2 }}</p>
+        </div>
+    </div>
+
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        var stripe = Stripe('{{ STRIPE_TEST_PUBLIC_KEY }}');
+        var elements = stripe.elements();
+        var cardElement = elements.create('card', {
+            hidePostalCode: true,
+            style: {
+                base: {
+                    fontSize: '16px',
+                    color: '#32325d',
+                    letterSpacing: '0.025em',
+                    padding: '10px', // Retaining valid CSS property
+                },
+                invalid: {
+                    color: '#fa755a',
+                    iconColor: '#fa755a',
+                }
+            }
+        });
+        cardElement.mount('#card-element');
+
+        var form = document.getElementById('payment-form');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Access card input directly from the card element
+            stripe.createToken(cardElement).then(function(result) {
+                if (result.error) {
+                    // Display error in your UI
+                    console.error(result.error.message);
+                } else {
+                    // Token created, set token value to hidden input
+                    document.getElementById('stripeToken').value = result.token.id;
+                    form.submit(); // Submit the form
+                }
+            });
+        });
+    </script>
+</body>
+</html>

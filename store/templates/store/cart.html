@@ -1,0 +1,30 @@
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart</title>
+    {% load static %}
+</head>
+<body>
+    <h1>Your Cart</h1>
+<h3>Total Price: ${{ total_price|floatformat:2 }}</h3>  <!-- Format total price -->
+<h3>Total Items: {{ total_quantity }}</h3>  <!-- Display total quantity of items -->
+<ul>
+    {% for item in order_items %}
+        <li>
+            <h2>{{ item.product.name }}</h2>
+            <p>Price: ${{ item.product.price|floatformat:2 }}</p> <!-- Format price -->
+            <p>Quantity: {{ item.quantity }}</p>
+            <p>Total: ${{ item.product.price|multiply:item.quantity|floatformat:2 }}</p> <!-- Format total per item -->
+        </li>
+    {% empty %}
+        <li>Your cart is empty.</li>
+    {% endfor %}
+</ul>
+<a href="{% url 'checkout' %}">Proceed to Checkout</a>
+<a href="{% url 'product_list' %}">Continue Shopping</a>
+
+</body>
+</html>

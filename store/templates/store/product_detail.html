@@ -1,0 +1,5 @@
+<h2>Product Detail Page</h2> <!-- Add this for testing -->
+<form action="{% url 'buy_now' product.id %}" method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary">Buy It Now</button>
+</form>

@@ -1,0 +1,31 @@
+body {
+    font-family: Arial, sans-serif; /* Use a clean font */
+    background-color: #f8f9fa; /* Light background color */
+}
+
+#checkout-container {
+    max-width: 500px; /* Limit form width */
+    margin: 50px auto; /* Center form */
+    padding: 20px; /* Add padding */
+    background-color: #fff; /* White background */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+#payment-form div {
+    margin-bottom: 20px; /* Space between elements */
+}
+
+button {
+    background-color: #007bff; /* Primary button color */
+    color: white; /* Button text color */
+    padding: 10px 20px; /* Button padding */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor */
+    transition: background-color 0.3s; /* Smooth transition */
+}
+
+button:hover {
+    background-color: #0056b3; /* Darker on hover */
+}

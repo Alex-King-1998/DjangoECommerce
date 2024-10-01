@@ -1,0 +1,11 @@
+<!-- templates/store/watchlist.html -->
+<h1>Your Watchlist</h1>
+{% if products %}
+    <ul>
+    {% for product in products %}
+        <li>{{ product.name }} - {{ product.price }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Your watchlist is empty.</p>
+{% endif %}
